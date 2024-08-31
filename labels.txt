@@ -1,0 +1,3 @@
+0 Underwatered
+1 Healthy
+2 Overwatered
