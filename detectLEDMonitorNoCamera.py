@@ -6,6 +6,15 @@ import time
 import board
 import neopixel_spi
 from plant_monitor import PlantMonitor
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+import json
+
+cred = credentials.Certificate('plantmonitor-19a40-firebase-adminsdk-8b656-ec89234839.json')
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://plantmonitor-19a40-default-rtdb.firebaseio.com'})
+# firebase_admin.initialize_app(cred)
+ref = db.reference("/")
 
 # Disable scientific notation for clarity
 np.set_printoptions(suppress=True)
@@ -64,10 +73,10 @@ while True:
 
     # Gets Monitor readings
     # print("reading monitor")
-    monitorValues[0] = pm.get_wetness()
-    print(str(monitorValues[0]) + "% Moisture")
-    # update_readings()
-    # print(monitorValues)
+    # monitorValues[0] = pm.get_wetness()
+    # print(str(monitorValues[0]) + "% Moisture")
+    update_readings()
+    print(monitorValues)
 
     # Lights LEDs
     if monitorValues[0] < 15:
@@ -77,17 +86,27 @@ while True:
     else:
         pixels.fill(0x000050)
 
+    dictionary = {
+        'Plant1': {'humidity': monitorValues[2], 'temperature': monitorValues[1], 'moisture': monitorValues[0]}
+    }  
+
+    with open("test.json", "w") as outfile:
+        json.dump(dictionary, outfile)
+
+    with open("test.json", "r") as f:
+	    file_contents = json.load(f)
+    ref.set(file_contents)
     # Print prediction and confidence score
     # print("Class:", class_name[2:], end="")
     # print("Confidence Score:", str(np.round(confidence_score * 100))[:-2], "%")
     # print(class_name[2:] + " (" + str(np.round(confidence_score * 100))[:-2] + "%)")
 
     # Listen to the keyboard for presses.
-    keyboard_input = cv2.waitKey(1)
+    # keyboard_input = cv2.waitKey(1)
 
     # 27 is the ASCII for the esc key on your keyboard.
-    if keyboard_input == 27:
-        break
+    # if keyboard_input == 27:
+        # break
     
     # time.sleep(5)
 
