@@ -3,3 +3,6 @@
 
 # ignore google-cloud-sdk directory
 google-cloud-sdk/
+
+# ignore keys
+keys/
