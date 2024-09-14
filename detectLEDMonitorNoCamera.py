@@ -11,10 +11,14 @@ from firebase_admin import credentials
 from firebase_admin import db
 import json
 
+print("1")
+
 cred = credentials.Certificate('plantmonitor-19a40-firebase-adminsdk-8b656-f5000f8953.json')
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://plantmonitor-19a40-default-rtdb.firebaseio.com'})
 # firebase_admin.initialize_app(cred)
 ref = db.reference("/")
+
+print("2")
 
 # Disable scientific notation for clarity
 np.set_printoptions(suppress=True)
@@ -40,6 +44,8 @@ time.sleep(1)
 pixels = neopixel_spi.NeoPixel_SPI(board.SPI(), 50)
 
 monitorValues = [0, 0, 0]
+
+print("3")
 
 def update_readings(): # update fields with new temp and eCO2 readings
     while True:
@@ -75,6 +81,7 @@ while True:
     # print("reading monitor")
     # monitorValues[0] = pm.get_wetness()
     # print(str(monitorValues[0]) + "% Moisture")
+    print("4")
     update_readings()
     print(monitorValues)
 
